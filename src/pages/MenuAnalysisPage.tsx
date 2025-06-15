@@ -10,7 +10,11 @@ import {
   Alert,
   Card,
   CardMedia,
+  AppBar,
+  Toolbar,
+  IconButton,
 } from '@mui/material'
+import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu'
 import { analyzeMenu } from '../services/menuService'
 import { dataService } from '../services/dataService'
 
@@ -24,6 +28,7 @@ const MenuAnalysisPage = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [showApiInput, setShowApiInput] = useState(false)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const hasMenuData = dataService.getMenuData() !== null
 
   useEffect(() => {
     const image = location.state?.image as File
@@ -59,7 +64,8 @@ const MenuAnalysisPage = () => {
 
       const menuData = await analyzeMenu(image, key)
       localStorage.setItem(API_KEY_STORAGE_KEY, key)
-      await dataService.setMenuData(menuData)
+      // Pass the original image to dataService
+      await dataService.setMenuData(menuData, image)
       navigate('/menu')
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'An error occurred'
@@ -80,107 +86,142 @@ const MenuAnalysisPage = () => {
     }
   }
 
+  const handleMenuClick = () => {
+    if (hasMenuData) {
+      navigate('/menu')
+    }
+  }
+
   if (!location.state?.image) {
     navigate('/')
     return null
   }
 
   return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        p: 2,
-        gap: 4,
-      }}
-    >
-      {showApiInput ? (
-        <Paper 
-          component="form" 
-          onSubmit={handleSubmit}
-          sx={{ p: 3, width: '100%', maxWidth: 400 }}
-        >
-          <Typography variant="h6" gutterBottom>
-            Enter OpenAI API Key
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            Your API key will be stored locally for future use
-          </Typography>
-          <TextField
-            fullWidth
-            label="API Key"
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
-            type="password"
-            error={!!error}
-            helperText={error}
-            sx={{ mb: 2 }}
-          />
-          <Button 
-            fullWidth 
-            variant="contained" 
-            type="submit"
-            disabled={!apiKey.trim() || isAnalyzing}
+    <>
+      {hasMenuData && (
+        <AppBar position="fixed" color="default" elevation={1}>
+          <Toolbar sx={{ justifyContent: 'flex-start' }}>
+            <IconButton
+              onClick={handleMenuClick}
+              sx={{
+                color: 'primary.main',
+                '&:hover': {
+                  backgroundColor: 'rgba(0, 28, 59, 0.04)',
+                }
+              }}
+              title="View Menu"
+            >
+              <RestaurantMenuIcon />
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+      )}
+
+      <Box
+        sx={{
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          p: 2,
+          gap: 4,
+          pt: hasMenuData ? 10 : 2, // Add padding top when AppBar is present
+          background: isAnalyzing ? 'linear-gradient(135deg, #001c3b 0%, #1a3a5c 100%)' : 'inherit',
+        }}
+      >
+        {showApiInput ? (
+          <Paper 
+            component="form" 
+            onSubmit={handleSubmit}
+            sx={{ p: 3, width: '100%', maxWidth: 400 }}
           >
-            {isAnalyzing ? 'Analyzing...' : 'Analyze Menu'}
-          </Button>
-        </Paper>
-      ) : isAnalyzing ? (
-        <>
-          <Box sx={{ textAlign: 'center' }}>
-            <CircularProgress size={60} />
-            <Typography variant="h6" sx={{ mt: 2 }}>
-              Analyzing menu...
+            <Typography variant="h6" gutterBottom sx={{ color: 'primary.main' }}>
+              Enter OpenAI API Key
             </Typography>
-          </Box>
-          {imagePreview && (
-            <Card 
-              sx={{ 
-                maxWidth: 400, 
-                width: '100%',
-                overflow: 'hidden',
-                opacity: 0.8, // Slightly dim the image during analysis
-                transition: 'opacity 0.3s ease',
-              }}
-            >
-              <CardMedia
-                component="img"
-                image={imagePreview}
-                alt="Menu preview"
-                sx={{
-                  width: '100%',
-                  height: 'auto',
-                  maxHeight: '60vh',
-                  objectFit: 'contain',
-                }}
-              />
-            </Card>
-          )}
-        </>
-      ) : error ? (
-        <Alert 
-          severity="error" 
-          action={
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              Your API key will be stored locally for future use
+            </Typography>
+            <TextField
+              fullWidth
+              label="API Key"
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              type="password"
+              error={!!error}
+              helperText={error}
+              sx={{ mb: 2 }}
+            />
             <Button 
-              color="inherit" 
-              size="small"
-              onClick={() => {
-                setError(null)
-                setShowApiInput(true)
+              fullWidth 
+              variant="contained" 
+              type="submit"
+              disabled={!apiKey.trim() || isAnalyzing}
+              sx={{
+                background: 'linear-gradient(45deg, #001c3b 30%, #1a3a5c 90%)',
+                '&:hover': {
+                  background: 'linear-gradient(45deg, #000f1f 30%, #001c3b 90%)',
+                }
               }}
             >
-              Try Again
+              {isAnalyzing ? 'Analyzing...' : 'Analyze Menu'}
             </Button>
-          }
-        >
-          {error}
-        </Alert>
-      ) : null}
-    </Box>
+          </Paper>
+        ) : isAnalyzing ? (
+          <>
+            <Box sx={{ textAlign: 'center' }}>
+              <CircularProgress size={60} sx={{ color: 'white' }} />
+              <Typography variant="h6" sx={{ mt: 2, color: 'white', fontWeight: 600 }}>
+                Analyzing menu...
+              </Typography>
+            </Box>
+            {imagePreview && (
+              <Card 
+                sx={{ 
+                  maxWidth: 400, 
+                  width: '100%',
+                  overflow: 'hidden',
+                  opacity: 0.9, // Slightly dim the image during analysis
+                  transition: 'opacity 0.3s ease',
+                }}
+              >
+                <CardMedia
+                  component="img"
+                  image={imagePreview}
+                  alt="Menu preview"
+                  sx={{
+                    width: '100%',
+                    height: 'auto',
+                    maxHeight: '60vh',
+                    objectFit: 'contain',
+                  }}
+                />
+              </Card>
+            )}
+          </>
+        ) : error ? (
+          <Alert 
+            severity="error" 
+            action={
+              <Button 
+                color="inherit" 
+                size="small"
+                onClick={() => {
+                  setError(null)
+                  setShowApiInput(true)
+                }}
+              >
+                Try Again
+              </Button>
+            }
+          >
+            {error}
+          </Alert>
+        ) : null}
+      </Box>
+    </>
   )
 }
 
-export default MenuAnalysisPage 
+export default MenuAnalysisPage

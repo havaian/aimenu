@@ -10,16 +10,16 @@ const theme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#2196F3', // A nice blue color
-      light: '#64B5F6',
-      dark: '#1976D2',
+      main: '#001c3b', // Navy blue
+      light: '#1a3a5c',
+      dark: '#000f1f',
       contrastText: '#fff',
     },
     secondary: {
-      main: '#FF4081', // Pink accent
-      light: '#FF80AB',
-      dark: '#F50057',
-      contrastText: '#fff',
+      main: '#d6af61', // Golden yellow
+      light: '#e4c584',
+      dark: '#b8943e',
+      contrastText: '#000',
     },
     background: {
       default: '#F5F5F5',
@@ -29,7 +29,10 @@ const theme = createTheme({
       main: '#FF5252',
     },
     warning: {
-      main: '#FFC107',
+      main: '#d6af61', // Use golden yellow for warnings
+      light: '#e4c584',
+      dark: '#b8943e',
+      contrastText: '#000',
     },
     success: {
       main: '#4CAF50',
@@ -67,7 +70,15 @@ const theme = createTheme({
         contained: {
           boxShadow: 'none',
           '&:hover': {
-            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+            boxShadow: '0px 4px 8px rgba(0, 28, 59, 0.2)',
+          },
+        },
+        outlined: {
+          borderColor: '#001c3b',
+          color: '#001c3b',
+          '&:hover': {
+            borderColor: '#1a3a5c',
+            backgroundColor: 'rgba(0, 28, 59, 0.04)',
           },
         },
       },
@@ -80,7 +91,7 @@ const theme = createTheme({
           transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
           '&:hover': {
             transform: 'translateY(-4px)',
-            boxShadow: '0px 8px 25px rgba(0, 0, 0, 0.1)',
+            boxShadow: '0px 8px 25px rgba(0, 28, 59, 0.15)',
           },
         },
       },
@@ -98,8 +109,9 @@ const theme = createTheme({
         root: {
           borderRadius: '8px',
           '&.MuiChip-colorWarning': {
-            backgroundColor: 'rgba(255, 193, 7, 0.1)',
-            color: '#B78103',
+            backgroundColor: 'rgba(214, 175, 97, 0.15)',
+            color: '#b8943e',
+            border: '1px solid rgba(214, 175, 97, 0.3)',
           },
         },
       },
@@ -109,6 +121,12 @@ const theme = createTheme({
         root: {
           '& .MuiOutlinedInput-root': {
             borderRadius: '12px',
+            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#001c3b',
+            },
+          },
+          '& .MuiInputLabel-root.Mui-focused': {
+            color: '#001c3b',
           },
         },
       },
@@ -116,7 +134,15 @@ const theme = createTheme({
     MuiCircularProgress: {
       styleOverrides: {
         root: {
-          color: '#2196F3',
+          color: '#001c3b',
+        },
+      },
+    },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#fff',
+          color: '#001c3b',
         },
       },
     },
@@ -139,4 +165,4 @@ function App() {
   )
 }
 
-export default App 
+export default App

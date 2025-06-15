@@ -18,6 +18,7 @@ export interface MenuCategory {
 export interface MenuData {
   categories: MenuCategory[];
   timestamp: number;
+  originalImage?: string; // Base64 encoded original menu image
 }
 
 class DataService {
@@ -52,10 +53,30 @@ class DataService {
     }
   }
 
-  public async setMenuData(menuData: any, imageCount: number = 6): Promise<void> {
+  private async convertImageToBase64(image: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(image);
+    });
+  }
+
+  public async setMenuData(menuData: any, originalImage?: File, imageCount: number = 6): Promise<void> {
+    let originalImageBase64: string | undefined;
+    
+    if (originalImage) {
+      try {
+        originalImageBase64 = await this.convertImageToBase64(originalImage);
+      } catch (error) {
+        console.error('Error converting image to base64:', error);
+      }
+    }
+
     this.currentMenu = {
       categories: menuData.categories,
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      originalImage: originalImageBase64
     };
     
     const imagePromises = this.currentMenu.categories.flatMap(category =>
@@ -95,6 +116,10 @@ class DataService {
     return this.currentMenu;
   }
 
+  public getOriginalMenuImage(): string | null {
+    return this.currentMenu?.originalImage || null;
+  }
+
   public getMenuItem(itemName: string): MenuItem | null {
     if (!this.currentMenu) return null;
 
@@ -113,4 +138,4 @@ class DataService {
   }
 }
 
-export const dataService = DataService.getInstance(); 
+export const dataService = DataService.getInstance();
