@@ -101,7 +101,7 @@ const MenuAnalysisPage = () => {
     <>
       {hasMenuData && (
         <AppBar position="fixed" color="default" elevation={1}>
-          <Toolbar sx={{ justifyContent: 'flex-start' }}>
+          <Toolbar sx={{ justifyContent: 'flex-end' }}>
             <IconButton
               onClick={handleMenuClick}
               sx={{

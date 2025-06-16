@@ -1,10 +1,11 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ThemeProvider, createTheme } from '@mui/material'
 import CssBaseline from '@mui/material/CssBaseline'
 import HomePage from './pages/HomePage'
 import MenuAnalysisPage from './pages/MenuAnalysisPage'
 import MenuListPage from './pages/MenuListPage'
 import DishDetailPage from './pages/DishDetailPage'
+import { dataService } from './services/dataService'
 
 const theme = createTheme({
   palette: {
@@ -149,13 +150,20 @@ const theme = createTheme({
   },
 })
 
+// Component to handle default route logic
+const DefaultRoute = () => {
+  const hasMenuData = dataService.getMenuData() !== null
+  return hasMenuData ? <Navigate to="/menu" replace /> : <Navigate to="/home" replace />
+}
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<DefaultRoute />} />
+          <Route path="/home" element={<HomePage />} />
           <Route path="/analysis" element={<MenuAnalysisPage />} />
           <Route path="/menu" element={<MenuListPage />} />
           <Route path="/dish/:id" element={<DishDetailPage />} />
