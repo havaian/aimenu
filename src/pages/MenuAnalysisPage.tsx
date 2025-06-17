@@ -128,7 +128,7 @@ const MenuAnalysisPage = () => {
           p: 2,
           gap: 4,
           pt: hasMenuData ? 10 : 2, // Add padding top when AppBar is present
-          background: isAnalyzing ? 'linear-gradient(135deg, #001c3b 0%, #1a3a5c 100%)' : 'inherit',
+          backgroundColor: 'white',
         }}
       >
         {showApiInput ? (
@@ -171,9 +171,18 @@ const MenuAnalysisPage = () => {
         ) : isAnalyzing ? (
           <>
             <Box sx={{ textAlign: 'center' }}>
-              <CircularProgress size={60} sx={{ color: 'white' }} />
-              <Typography variant="h6" sx={{ mt: 2, color: 'white', fontWeight: 600 }}>
-                Analyzing menu...
+              <CircularProgress 
+                size={80} 
+                thickness={4}
+                sx={{ 
+                  color: 'white',
+                  backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                  borderRadius: '50%',
+                  p: 1
+                }} 
+              />
+              <Typography variant="body2" sx={{ mt: 3, color: 'text.secondary' }}>
+                Finding delicious recipes you can make!
               </Typography>
             </Box>
             {imagePreview && (
@@ -182,8 +191,6 @@ const MenuAnalysisPage = () => {
                   maxWidth: 400, 
                   width: '100%',
                   overflow: 'hidden',
-                  opacity: 0.9, // Slightly dim the image during analysis
-                  transition: 'opacity 0.3s ease',
                 }}
               >
                 <CardMedia
