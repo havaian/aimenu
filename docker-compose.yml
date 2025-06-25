@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  aimenu:
+    build: .
+    container_name: aimenu
+    ports:
+      - "${EXPOSE}:80"
+    environment:
+      - NODE_ENV=${NODE_ENV}
+    restart: unless-stopped
