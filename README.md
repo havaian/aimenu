@@ -1,4 +1,4 @@
-# Ai Menu Parser
+# Aimenu
 
 Step 1. Add your Google Image Search key to `src/config/config.ts`
 
