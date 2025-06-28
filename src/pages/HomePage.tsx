@@ -72,7 +72,7 @@ const HomePage = () => {
             pt: hasMenuData ? 8 : 0, // Add padding top when AppBar is present
           }}
         >
-          <Logo src="/logo.png" alt="Menu Translator" />
+          <Logo src="/bolt-logo.png" alt="Menu Translator" />
           <Typography variant="h4" gutterBottom sx={{ color: 'primary.main', fontWeight: 600 }}>
             Menu Translator
           </Typography>
