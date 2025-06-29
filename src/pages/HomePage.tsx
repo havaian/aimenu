@@ -72,9 +72,14 @@ const HomePage = () => {
             pt: hasMenuData ? 8 : 0, // Add padding top when AppBar is present
           }}
         >
-          <Logo src="/bolt-logo.png" alt="Menu Translator" />
+          <a href='https://bolt.new/' target="_blank" rel="noopener noreferrer">
+            <Logo src="/bolt-logo.png" alt="Menu Translator" />
+          </a>
           <Typography variant="h4" gutterBottom sx={{ color: 'primary.main', fontWeight: 600 }}>
             Menu Translator
+          </Typography>
+          <Typography variant="subtitle1" sx={{ color: 'text.secondary', mb: 2, maxWidth: '400px' }}>
+            Take a photo of the menu or a dish and discover all the ingredients it consists of!
           </Typography>
 
           <Box sx={{ mt: 4, display: 'flex', gap: 2, flexDirection: 'column', width: '100%' }}>
